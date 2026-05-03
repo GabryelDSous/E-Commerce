@@ -14,6 +14,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -41,5 +43,11 @@ public class UserController {
                                                               @RequestBody @Valid UserUpdateEmailRequest userRequest) {
         UserUpdateEmailResponse response = new UserUpdateEmailResponse(userService.userUpdate(userData, userRequest));
         return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> userDeleteById(@PathVariable("id") UUID id) {
+        userService.userDeleteById(id);
+        return ResponseEntity.ok("Successfully deleted");
     }
 }
