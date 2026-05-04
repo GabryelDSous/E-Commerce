@@ -1,13 +1,11 @@
 package dev.gabryel.ecommerce.controller;
 
 import dev.gabryel.ecommerce.config.JWTUserData;
-import dev.gabryel.ecommerce.dto.user.request.UserDeleteRequest;
-import dev.gabryel.ecommerce.dto.user.request.UserLoginRequest;
-import dev.gabryel.ecommerce.dto.user.request.UserRegisterRequest;
-import dev.gabryel.ecommerce.dto.user.request.UserUpdateEmailRequest;
+import dev.gabryel.ecommerce.dto.user.request.*;
 import dev.gabryel.ecommerce.dto.user.response.UserLoginResponse;
 import dev.gabryel.ecommerce.dto.user.response.UserRegisterResponse;
 import dev.gabryel.ecommerce.dto.user.response.UserUpdateEmailResponse;
+import dev.gabryel.ecommerce.dto.user.response.UserUpdateNameAndPassResponse;
 import dev.gabryel.ecommerce.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -50,6 +48,13 @@ public class UserController {
                                                               @RequestBody @Valid UserUpdateEmailRequest userRequest) {
         UserUpdateEmailResponse response = new UserUpdateEmailResponse(userService.userUpdate(userData, userRequest));
         return ResponseEntity.ok(response);
+    }
+    @PreAuthorize("isAuthenticated()")
+    @PutMapping("/update-nameandpass")
+    public ResponseEntity<UserUpdateNameAndPassResponse> userUpdateNameAndPass(@AuthenticationPrincipal JWTUserData userData,
+                                                                               @RequestBody @Valid UserUpdateNameAndPassRequest userRequest) {
+        UserUpdateNameAndPassResponse userUpdateNameAndPass = userService.userUpdateNameAndPass(userData, userRequest);
+        return ResponseEntity.ok(userUpdateNameAndPass);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
