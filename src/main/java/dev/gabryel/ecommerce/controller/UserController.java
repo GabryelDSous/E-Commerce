@@ -47,6 +47,13 @@ public class UserController {
         return ResponseEntity.ok(userListResponses);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/find-email")
+    public ResponseEntity<UserListResponse> userListByEmail(@RequestParam(value = "email") String email) {
+        UserListResponse userListResponses = userService.userFindByEmail(email);
+        return ResponseEntity.ok(userListResponses);
+    }
+
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/update-email")
     public ResponseEntity<UserUpdateEmailResponse> userUpdate(@AuthenticationPrincipal JWTUserData userData,
