@@ -17,7 +17,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.stylesheets.LinkStyle;
 
 import java.util.List;
 import java.util.UUID;
@@ -63,6 +62,12 @@ public class UserService {
         return userModels.stream()
                 .map(UserMapper::toUseListResponse)
                 .toList();
+    }
+
+    public UserListResponse userFindByEmail(String email) {
+        UserModel userModel = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserException("User does not found", HttpStatus.NOT_FOUND.value()));
+        return UserMapper.toUseListResponse(userModel);
     }
 
     @Transactional
