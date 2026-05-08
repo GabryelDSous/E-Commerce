@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-interface ProductRepository extends JpaRepository<ProductModel, UUID> {
+public interface ProductRepository extends JpaRepository<ProductModel, UUID> {
     List<ProductModel> findByNameContainingIgnoreCase(String name);
     List<ProductModel> findByDescriptionContainingIgnoreCase(String description);
     List<ProductModel> findByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice);
