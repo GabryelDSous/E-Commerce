@@ -43,6 +43,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests( auth -> auth
                         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                         .requestMatchers("/users/**").permitAll()
+                        .requestMatchers("/products/**").permitAll()
                         .anyRequest().authenticated()
 
                 )
