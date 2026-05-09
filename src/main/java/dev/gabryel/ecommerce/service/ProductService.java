@@ -2,8 +2,10 @@ package dev.gabryel.ecommerce.service;
 
 import dev.gabryel.ecommerce.config.JWTUserData;
 import dev.gabryel.ecommerce.dto.product.request.ProductRegisterRequest;
+import dev.gabryel.ecommerce.dto.product.request.ProductUpdateRequest;
 import dev.gabryel.ecommerce.dto.product.response.ProductListResponse;
 import dev.gabryel.ecommerce.dto.product.response.ProductRegisterResponse;
+import dev.gabryel.ecommerce.dto.product.response.ProductUpdateResponse;
 import dev.gabryel.ecommerce.exception.ProductException;
 import dev.gabryel.ecommerce.exception.UserException;
 import dev.gabryel.ecommerce.mapper.ProductMapper;
@@ -16,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ProductService {
@@ -43,5 +46,17 @@ public class ProductService {
         return productModels.stream()
                 .map(ProductMapper::toProductListResponse)
                 .toList();
+    }
+
+    @Transactional
+    public ProductUpdateResponse productUpdate(UUID id, ProductUpdateRequest productRequest) {
+        ProductModel productModel = productRepository.findById(id)
+                .orElseThrow(() -> new ProductException("Product not found", HttpStatus.NOT_FOUND.value()));
+        productModel.setName(productRequest.name());
+        productModel.setDescription(productRequest.description());
+        productModel.setPrice(productRequest.price());
+        productModel.setSellerName(productRequest.sellerName());
+        productModel.setStock(productRequest.stock());
+        return ProductMapper.toProductUpdateResponse(productModel);
     }
 }
