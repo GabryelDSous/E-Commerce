@@ -76,7 +76,13 @@ public class ProductService {
     }
 
     public List<ProductListByAttributeResponse> productListByStatus(String status) {
-        List<ProductModel> productModels = productRepository.findByStatus(ProductStatus.valueOf(status.toUpperCase()));
+        ProductStatus productStatus;
+        try {
+            productStatus = ProductStatus.valueOf(status.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new ProductException("Status not exists! Try ACTIVE or OUT_OF_STOCK", HttpStatus.CONFLICT.value());
+        }
+        List<ProductModel> productModels = productRepository.findByStatus(productStatus);
         if (productModels.isEmpty())
             throw new ProductException("Products not found", HttpStatus.NOT_FOUND.value());
         return productModels.stream()
