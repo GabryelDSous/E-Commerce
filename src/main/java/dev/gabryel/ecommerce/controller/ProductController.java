@@ -1,12 +1,14 @@
 package dev.gabryel.ecommerce.controller;
 
 import dev.gabryel.ecommerce.config.JWTUserData;
+import dev.gabryel.ecommerce.dto.product.request.ProductFindByPriceRequest;
 import dev.gabryel.ecommerce.dto.product.request.ProductRegisterRequest;
 import dev.gabryel.ecommerce.dto.product.request.ProductUpdateRequest;
-import dev.gabryel.ecommerce.dto.product.response.ProductListByNameResponse;
+import dev.gabryel.ecommerce.dto.product.response.ProductListByAttributeResponse;
 import dev.gabryel.ecommerce.dto.product.response.ProductListResponse;
 import dev.gabryel.ecommerce.dto.product.response.ProductRegisterResponse;
 import dev.gabryel.ecommerce.dto.product.response.ProductUpdateResponse;
+import dev.gabryel.ecommerce.model.enums.ProductStatus;
 import dev.gabryel.ecommerce.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -42,8 +44,26 @@ class ProductController {
     }
 
     @GetMapping("/list-name")
-    public ResponseEntity<List<ProductListByNameResponse>> productListByName(@RequestParam(value = "name") String name) {
-        List<ProductListByNameResponse> productListByNameResponses = productService.productListByName(name);
+    public ResponseEntity<List<ProductListByAttributeResponse>> productListByName(@RequestParam(value = "name") String name) {
+        List<ProductListByAttributeResponse> productListByNameResponses = productService.productListByName(name);
+        return ResponseEntity.ok(productListByNameResponses);
+    }
+
+    @GetMapping("/list-description")
+    public ResponseEntity<List<ProductListByAttributeResponse>> productListByDescription(@RequestParam(value = "description") String name) {
+        List<ProductListByAttributeResponse> productListByNameResponses = productService.productListByDescription(name);
+        return ResponseEntity.ok(productListByNameResponses);
+    }
+
+    @PostMapping("/list-price")
+    public ResponseEntity<List<ProductListByAttributeResponse>> productListByPrice(@RequestBody @Valid ProductFindByPriceRequest productRequest) {
+        List<ProductListByAttributeResponse> productListByNameResponses = productService.productListByPrice(productRequest);
+        return ResponseEntity.ok(productListByNameResponses);
+    }
+
+    @GetMapping("/list-status")
+    public ResponseEntity<List<ProductListByAttributeResponse>> productListByStatus(@RequestParam(value = "status") String status) {
+        List<ProductListByAttributeResponse> productListByNameResponses = productService.productListByStatus(status);
         return ResponseEntity.ok(productListByNameResponses);
     }
 
