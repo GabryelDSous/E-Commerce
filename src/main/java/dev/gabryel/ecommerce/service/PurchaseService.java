@@ -4,6 +4,7 @@ import dev.gabryel.ecommerce.config.JWTUserData;
 import dev.gabryel.ecommerce.dto.purchase.request.PurchaseProductRequest;
 import dev.gabryel.ecommerce.dto.purchase.response.PurchaseProductResponse;
 import dev.gabryel.ecommerce.exception.ProductException;
+import dev.gabryel.ecommerce.exception.PurchaseException;
 import dev.gabryel.ecommerce.exception.UserException;
 import dev.gabryel.ecommerce.mapper.PurchaseMapper;
 import dev.gabryel.ecommerce.model.ProductModel;
@@ -41,10 +42,19 @@ public class PurchaseService {
                 .orElseThrow(() -> new ProductException("Product not found", HttpStatus.NOT_FOUND.value()));
         int decreased = productRepository.decreaseStock(productModel.getName(), purchaseRequest.quantity());
         if (decreased == 0)
-            throw new RuntimeException("Product cannot be purchased");
+            throw new PurchaseException("Product cannot be purchased", HttpStatus.NOT_FOUND.value());
         PurchaseModel purchaseModel = PurchaseMapper.toPurchaseModel(userModel, productModel);
         purchaseModel.setQuantity(purchaseRequest.quantity());
         purchaseRepository.save(purchaseModel);
         return PurchaseMapper.toPurchaseProductResponse(purchaseModel);
+    }
+
+    public List<PurchaseProductResponse> purchaseListAll() {
+        List<PurchaseModel> purchaseModels = purchaseRepository.findAll();
+        if (purchaseModels.isEmpty())
+            throw new PurchaseException("Product cannot be purchased", HttpStatus.NOT_FOUND.value());
+        return purchaseModels.stream()
+                .map(PurchaseMapper::toPurchaseProductResponse)
+                .toList();
     }
 }
