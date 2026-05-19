@@ -7,6 +7,8 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -38,4 +40,7 @@ public class ProductModel implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private ProductStatus status;
+
+    @OneToMany(mappedBy = "productModel", fetch = FetchType.LAZY)
+    private Set<PurchaseModel> users = new HashSet<>();
 }
