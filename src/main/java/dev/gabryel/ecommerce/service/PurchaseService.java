@@ -14,11 +14,9 @@ import dev.gabryel.ecommerce.repository.ProductRepository;
 import dev.gabryel.ecommerce.repository.PurchaseRepository;
 import dev.gabryel.ecommerce.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import org.postgresql.util.PSQLException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,6 +42,8 @@ public class PurchaseService {
         if (decreased == 0)
             throw new PurchaseException("Product cannot be purchased", HttpStatus.NOT_FOUND.value());
         PurchaseModel purchaseModel = PurchaseMapper.toPurchaseModel(userModel, productModel);
+        purchaseModel.setUserModel(userModel);
+        purchaseModel.setProductModel(productModel);
         purchaseModel.setQuantity(purchaseRequest.quantity());
         purchaseRepository.save(purchaseModel);
         return PurchaseMapper.toPurchaseProductResponse(purchaseModel);
@@ -51,6 +51,17 @@ public class PurchaseService {
 
     public List<PurchaseProductResponse> purchaseListAll() {
         List<PurchaseModel> purchaseModels = purchaseRepository.findAll();
+        if (purchaseModels.isEmpty())
+            throw new PurchaseException("Product cannot be purchased", HttpStatus.NOT_FOUND.value());
+        return purchaseModels.stream()
+                .map(PurchaseMapper::toPurchaseProductResponse)
+                .toList();
+    }
+
+    public List<PurchaseProductResponse> purchaseListByUserModel(UUID userId) {
+        UserModel userModel = userRepository.findById(userId)
+                .orElseThrow(() -> new UserException("Users not found", HttpStatus.NOT_FOUND.value()));;
+        List<PurchaseModel> purchaseModels = purchaseRepository.findByUserModel(userModel);
         if (purchaseModels.isEmpty())
             throw new PurchaseException("Product cannot be purchased", HttpStatus.NOT_FOUND.value());
         return purchaseModels.stream()
