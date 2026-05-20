@@ -58,7 +58,7 @@ public class PurchaseService {
                 .toList();
     }
 
-    public List<PurchaseProductResponse> purchaseListByUserModel(UUID userId) {
+    public List<PurchaseProductResponse> purchaseListByUserId(UUID userId) {
         UserModel userModel = userRepository.findById(userId)
                 .orElseThrow(() -> new UserException("Users not found", HttpStatus.NOT_FOUND.value()));;
         List<PurchaseModel> purchaseModels = purchaseRepository.findByUserModel(userModel);

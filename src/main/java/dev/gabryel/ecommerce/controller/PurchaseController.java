@@ -37,7 +37,7 @@ public class PurchaseController {
 
     @GetMapping("/list-id")
     public ResponseEntity<List<PurchaseProductResponse>> purchaseListByUserId(@RequestParam(value = "userId") UUID userId) {
-        List<PurchaseProductResponse> purchaseResponses = purchaseService.purchaseListByUserModel(userId);
+        List<PurchaseProductResponse> purchaseResponses = purchaseService.purchaseListByUserId(userId);
         return ResponseEntity.ok(purchaseResponses);
     }
 }
