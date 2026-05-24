@@ -42,5 +42,5 @@ public class ProductModel implements Serializable {
     private ProductStatus status;
 
     @OneToMany(mappedBy = "productModel", fetch = FetchType.LAZY)
-    private Set<PurchaseModel> users = new HashSet<>();
+    private Set<PurchaseModel> purchases = new HashSet<>();
 }
