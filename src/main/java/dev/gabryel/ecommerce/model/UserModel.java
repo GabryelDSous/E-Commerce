@@ -36,7 +36,7 @@ public class UserModel implements Serializable, UserDetails {
     private UserRoles role;
 
     @OneToMany(mappedBy = "userModel", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    private Set<PurchaseModel> products = new HashSet<>();
+    private Set<PurchaseModel> purchases = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
